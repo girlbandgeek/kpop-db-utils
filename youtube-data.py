@@ -18,19 +18,12 @@ from googleapiclient.discovery import build
 
 # Define some variables
 # I have created an api key. This may supersede the Oauth stuff.
-# should be moved to .env variable before committing
-api_key = 'AIzaSyBkzhQBGvsPz20aU0QnLBOvhKmSpAJJyas'
+
+load_dotenv()
+api_key=os.getenv("yt_api_key")
 
 # Google API related:
 scopes = ["https://www.googleapis.com/auth/youtube.force-ssl"]
-# UCP5H3NxIdTebfMG-Iy3vIvQ
-
-'''
-    request = youtube.channels().list(
-        part='statistics, contentDetails',
-        id='UCP5H3NxIdTebfMG-Iy3vIvQ'
-        )
-'''
 
 # Function to query music video data from YouTube
 def youtube_qry(music_video):
@@ -46,12 +39,7 @@ def youtube_qry(music_video):
 
     return response
 
+###  MAIN SCRIPT EXECUTION  ###
 my_data = youtube_qry('38xYeot-ciM')
 print("Playlist response output:")
 print(my_data)
-    
-
-
-###  MAIN SCRIPT EXECUTION  ###
-
-
