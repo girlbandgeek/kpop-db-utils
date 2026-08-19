@@ -26,13 +26,14 @@ api_key=os.getenv("yt_api_key")
 scopes = ["https://www.googleapis.com/auth/youtube.force-ssl"]
 
 # Function to query music video data from YouTube
-def youtube_qry(music_video):
+def youtube_qry(mv):
 
     youtube = build('youtube', 'v3', developerKey=api_key)
 
     request = youtube.videos().list(
-        part='snippet,contentDetails,statistics',
-        id=music_video
+        # part='snippet,contentDetails,statistics',
+        part='snippet',
+        id=mv
     )
 
     response = request.execute()
@@ -40,6 +41,11 @@ def youtube_qry(music_video):
     return response
 
 ###  MAIN SCRIPT EXECUTION  ###
-my_data = youtube_qry('38xYeot-ciM')
+parser = argparse.ArgumentParser()
+parser.add_argument("music_video")
+args = parser.parse_args()
+music_vid = args.music_video
+# my_data = youtube_qry('38xYeot-ciM')
+my_data = youtube_qry(music_vid)
 print("Playlist response output:")
 print(my_data)
