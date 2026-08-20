@@ -38,6 +38,17 @@ def youtube_qry(mv):
 
     response = request.execute()
 
+    # convert list to dict
+    # mv_dict = [(index, item) for index, item in enumerate(response)]
+    # mv_dict = dict(mv_dict)
+
+    # Explore the layout of the YT response
+    for key, value in response.items():
+        print("key: ", key)
+        print("value: ", response[key])
+        print("items type: ", type(response[key]))
+        print()
+
     return response
 
 ###  MAIN SCRIPT EXECUTION  ###
@@ -47,5 +58,5 @@ args = parser.parse_args()
 music_vid = args.music_video
 # my_data = youtube_qry('38xYeot-ciM')
 my_data = youtube_qry(music_vid)
-print("Playlist response output:")
-print(my_data)
+# print("Playlist response output:")
+# print(my_data)
