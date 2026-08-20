@@ -49,6 +49,22 @@ def youtube_qry(mv):
         print("items type: ", type(response[key]))
         print()
 
+    # enumerate the items (not useful)
+    '''
+    for i, v in enumerate(response["items"]):
+        print(i, v)
+    '''
+
+    # print("items[0] type is: ", type(response["items"][0]))
+    # Let's unpack response["items"][0]
+    item_dict=response["items"][0]
+    print("Unpacking the inner dict of items")
+    # print(type(item_dict))
+
+    for kkey, vvalue in item_dict.items() :
+        print("key: ", kkey)
+        print("value: ", vvalue)
+
     return response
 
 ###  MAIN SCRIPT EXECUTION  ###
