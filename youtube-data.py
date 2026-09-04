@@ -49,11 +49,6 @@ def youtube_qry(mv):
         print("items type: ", type(response[key]))
         print()
 
-    # enumerate the items (not useful)
-    '''
-    for i, v in enumerate(response["items"]):
-        print(i, v)
-    '''
 
     # print("items[0] type is: ", type(response["items"][0]))
     # Let's unpack response["items"][0]

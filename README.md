@@ -14,12 +14,15 @@ mv_theme
 
 musicvideo
 	MV_ID: text (YouTube MV ID)
-	title: text
-	description: text
+	title: text (song title)
 	artist: text
-	genre: text
-	gender: text
-	date: text
+	description: text
+	publishedDate: text [formatted as "YYYY-MM-DD HH:MM:SS.SSS"]
+	updatedDate: text [formatted as "YYYY-MM-DD HH:MM:SS.SSS"]
+	gender: text ["girl group", "boy group", "solo female", "sole male", "mixed", "other"]
+	genre: text ["kpop", "kindie", "khiphop", "krock"]
+	type: text ["music video", "music show", "fancam", "performance", "live", "practice"]
+	numPlays: integer
 
 playlist
 	themePlaylist: text	# The playlist ID

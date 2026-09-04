@@ -1,4 +1,5 @@
 client_secrets.json
 json/
+json-to-be-checked/
 .env
 *.kate-swp
