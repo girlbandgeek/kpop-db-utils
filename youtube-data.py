@@ -68,25 +68,43 @@ def youtube_qry(mv):
     print("Extract the desired fields")
     ref_url='https://www.youtube.com/watch?v='+mv
     print("Reference url: ", ref_url)
-    # title: text (song title)
-    # artist: text
-    # description: text
     t_title=response["items"][0]["snippet"]["title"]
     print("Title: ", t_title)
+    # title: text (song title)
+    my_title = input('Enter song title: ')
+    # artist: text
+    my_artist = input('Enter artist name: ')
+    # description: text
+    my_description = input('Enter description (optional): ')
+
     # publishedDate: text [formatted as "YYYY-MM-DD HH:MM:SS.SSS"]
     t_publishedDate=response["items"][0]["snippet"]["publishedAt"]
     c_publishedDate=datetime.datetime.strptime(t_publishedDate, "%Y-%m-%dT%H:%M:%SZ")
     print("publishedDate: ", c_publishedDate)
     # updatedDate: text [formatted as "YYYY-MM-DD HH:MM:SS.SSS"]
     t_updatedDate=datetime.datetime.now()
-    print("updatedDate: ", t_updatedDate)
+    # print("updatedDate: ", t_updatedDate)
     # gender: text ["girl group", "boy group", "solo female", "sole male", "mixed", "other"]
+    my_gender = input('Enter gender ["girl group", "boy group", "solo female", "sole male", "mixed", "other"]: ')
     # genre: text ["k-pop", "k-indie", "k-hiphop", "k-rock"]
+    my_genre = input('Enter genre ["k-pop", "k-indie", "k-hiphop", "k-rock"]: ')
     # type: text ["music video", "music show", "fancam", "performance", "live", "practice"]
+    my_type = input('Enter type ["music video", "music show", "fancam", "performance", "live", "practice"]: ')
     # numPlays: integer
     t_numPlays=response["items"][0]["statistics"]["viewCount"]
-    print("numPlays: ", t_numPlays)
+    # print("numPlays: ", t_numPlays)
 
+    print()
+    print('The following values will be updated.')
+    print("Title: ", my_title)
+    print("Artist: ", my_artist)
+    print("Description: ", my_description)
+    print("publishedDate: ", c_publishedDate)
+    print("updatedDate: ", t_updatedDate)
+    print("gender: ", my_gender)
+    print("genre: ", my_genre)
+    print("type: ", my_type)
+    print("numPlays: ", t_numPlays)
 
     return response
 
