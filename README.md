@@ -20,7 +20,7 @@ musicvideo
 	publishedDate: text [formatted as "YYYY-MM-DD HH:MM:SS.SSS"]
 	updatedDate: text [formatted as "YYYY-MM-DD HH:MM:SS.SSS"]
 	gender: text ["girl group", "boy group", "solo female", "sole male", "mixed", "other"]
-	genre: text ["kpop", "kindie", "khiphop", "krock"]
+	genre: text ["k-pop", "k-indie", "k-hiphop", "k-rock"]
 	type: text ["music video", "music show", "fancam", "performance", "live", "practice"]
 	numPlays: integer
 

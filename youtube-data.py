@@ -32,15 +32,12 @@ def youtube_qry(mv):
 
     request = youtube.videos().list(
         # part='snippet,contentDetails,statistics',
-        part='snippet',
+        # part='snippet',
+        part='snippet,statistics',
         id=mv
     )
 
     response = request.execute()
-
-    # convert list to dict
-    # mv_dict = [(index, item) for index, item in enumerate(response)]
-    # mv_dict = dict(mv_dict)
 
     # Explore the layout of the YT response
     for key, value in response.items():
@@ -49,8 +46,6 @@ def youtube_qry(mv):
         print("items type: ", type(response[key]))
         print()
 
-
-    # print("items[0] type is: ", type(response["items"][0]))
     # Let's unpack response["items"][0]
     item_dict=response["items"][0]
     print("Unpacking the inner dict of items")
@@ -59,6 +54,39 @@ def youtube_qry(mv):
     for kkey, vvalue in item_dict.items() :
         print("key: ", kkey)
         print("value: ", vvalue)
+
+    # Let's unpack the snippet
+    snippet_dict=response["items"][0]["snippet"]
+    print()
+    print("Unpacking the snippet")
+    for kkey, vvalue in snippet_dict.items() :
+        print("key: ", kkey)
+        print("value: ", vvalue)
+
+    # Here is placeholder for extracting the db fields
+    print()
+    print("Extract the desired fields")
+    ref_url='https://www.youtube.com/watch?v='+mv
+    print("Reference url: ", ref_url)
+    # title: text (song title)
+    # artist: text
+    # description: text
+    t_title=response["items"][0]["snippet"]["title"]
+    print("Title: ", t_title)
+    # publishedDate: text [formatted as "YYYY-MM-DD HH:MM:SS.SSS"]
+    t_publishedDate=response["items"][0]["snippet"]["publishedAt"]
+    c_publishedDate=datetime.datetime.strptime(t_publishedDate, "%Y-%m-%dT%H:%M:%SZ")
+    print("publishedDate: ", c_publishedDate)
+    # updatedDate: text [formatted as "YYYY-MM-DD HH:MM:SS.SSS"]
+    t_updatedDate=datetime.datetime.now()
+    print("updatedDate: ", t_updatedDate)
+    # gender: text ["girl group", "boy group", "solo female", "sole male", "mixed", "other"]
+    # genre: text ["k-pop", "k-indie", "k-hiphop", "k-rock"]
+    # type: text ["music video", "music show", "fancam", "performance", "live", "practice"]
+    # numPlays: integer
+    t_numPlays=response["items"][0]["statistics"]["viewCount"]
+    print("numPlays: ", t_numPlays)
+
 
     return response
 
