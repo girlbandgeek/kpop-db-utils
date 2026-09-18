@@ -19,9 +19,9 @@ musicvideo
 	description: text
 	publishedDate: text [formatted as "YYYY-MM-DD HH:MM:SS.SSS"]
 	updatedDate: text [formatted as "YYYY-MM-DD HH:MM:SS.SSS"]
-	gender: text ["girl group", "boy group", "solo female", "sole male", "mixed", "other"]
-	genre: text ["k-pop", "k-indie", "k-hiphop", "k-rock"]
-	type: text ["music video", "music show", "fancam", "performance", "live", "practice"]
+	gender: integer ["1 (boy group)", "2 (girl group)", "3 (sole male)", "4 (solo female)", "5 (mixed)", "6 (other)"]
+	genre: integer [1 (k-pop)", "2 (k-indie)", "3 (k-hiphop)", "4 (k-rock)]
+	type: integer ["1 (MV)", "2 (performance)", "3 (music show)", "4 (fancam)", "5 (live)", "6 (practice)"]
 	numPlays: integer
 
 playlist

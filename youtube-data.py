@@ -25,6 +25,8 @@ api_key=os.getenv("yt_api_key")
 # Google API related:
 scopes = ["https://www.googleapis.com/auth/youtube.force-ssl"]
 
+### FUNCTIONS ###
+
 # Function to query music video data from YouTube
 def youtube_qry(mv):
 
@@ -38,7 +40,8 @@ def youtube_qry(mv):
     )
 
     response = request.execute()
-
+    # Uncomment below for verbose/redundant output
+    '''
     # Explore the layout of the YT response
     for key, value in response.items():
         print("key: ", key)
@@ -62,7 +65,7 @@ def youtube_qry(mv):
     for kkey, vvalue in snippet_dict.items() :
         print("key: ", kkey)
         print("value: ", vvalue)
-
+    '''
     # Here is placeholder for extracting the db fields
     print()
     print("Extract the desired fields")
@@ -84,15 +87,10 @@ def youtube_qry(mv):
     # updatedDate: text [formatted as "YYYY-MM-DD HH:MM:SS.SSS"]
     t_updatedDate=datetime.datetime.now()
     # print("updatedDate: ", t_updatedDate)
-    # gender: text ["girl group", "boy group", "solo female", "sole male", "mixed", "other"]
-    my_gender = input('Enter gender ["girl group", "boy group", "solo female", "sole male", "mixed", "other"]: ')
-    # genre: text ["k-pop", "k-indie", "k-hiphop", "k-rock"]
-    my_genre = input('Enter genre ["k-pop", "k-indie", "k-hiphop", "k-rock"]: ')
-    # type: text ["music video", "music show", "fancam", "performance", "live", "practice"]
-    my_type = input('Enter type ["music video", "music show", "fancam", "performance", "live", "practice"]: ')
-    # numPlays: integer
+    my_gender = input('Enter gender ["1 (boy group)", "2 (girl group)", "3 (sole male)", "4 (solo female)", "5 (mixed)", "6 (other)"]: ')
+    my_genre = input('Enter genre ["1 (k-pop)", "2 (k-indie)", "3 (k-hiphop)", "4 (k-rock)"]: ')
+    my_type = input('Enter type ["1 (MV)", "2 (performance)", "3 (music show)", "4 (fancam)", "5 (live)", "6 (practice"]: ')
     t_numPlays=response["items"][0]["statistics"]["viewCount"]
-    # print("numPlays: ", t_numPlays)
 
     print()
     print('The following values will be updated.')
@@ -107,6 +105,14 @@ def youtube_qry(mv):
     print("numPlays: ", t_numPlays)
 
     return response
+
+# Function to check database for existing data
+# def database_qry(mv):
+#      return db_contents # list containing db record associated with the requested mv
+
+# Function to update database with enriched data
+# def db_update(item_list):
+#      return db_result # possibly some kind of status
 
 ###  MAIN SCRIPT EXECUTION  ###
 parser = argparse.ArgumentParser()
