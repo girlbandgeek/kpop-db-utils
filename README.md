@@ -40,3 +40,7 @@ Some companion utilities for kpop_monday_playlist_builder. We are going to gathe
 	+ index: integer
 	+ genre: text
 +
+* type (lookup table to convert integer to readable type)
+	+ index: integer
+	+ type: text
++
