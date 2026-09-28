@@ -15,6 +15,10 @@ import google_auth_oauthlib.flow
 import googleapiclient.discovery
 import googleapiclient.errors
 from googleapiclient.discovery import build
+import sqlite3
+
+sqlite_db = '/var/sqlite/kpop_monday.db'
+connection = sqlite3.connect(sqlite_db)
 
 # Define some variables
 # I have created an api key. This may supersede the Oauth stuff.
