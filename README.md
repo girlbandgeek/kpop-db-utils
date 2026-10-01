@@ -1,8 +1,18 @@
 # DB Utils
 
+## Summary
 Some companion utilities for kpop_monday_playlist_builder. We are going to gather and save various stats related to the playlists in a sqlite database.
 
-## Schema
+## Tools
+
+### kpop_db_util.py
+usage: kpop_db_util.py [-h] [-t] [-m] json_file
+
+### youtube-data.py
+usage: youtube-data.py [-h] music_video
+
+
+## Database Schema
 * theme
 	+ themeId: text
 	+ themeName: text
