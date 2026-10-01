@@ -93,9 +93,11 @@ def youtube_qry(mv):
     # print("updatedDate: ", t_updatedDate)
     my_gender = input('Enter gender ["1 (boy group)", "2 (girl group)", "3 (sole male)", "4 (solo female)", "5 (mixed)", "6 (other)"]: ')
     my_genre = input('Enter genre ["1 (k-pop)", "2 (k-indie)", "3 (k-hiphop)", "4 (k-rock)"]: ')
-    my_type = input('Enter type ["1 (MV)", "2 (performance)", "3 (music show)", "4 (fancam)", "5 (live)", "6 (practice"]: ')
+    my_type = input('Enter type ["1 (MV)", "2 (performance)", "3 (music show)", "4 (fancam)", "5 (live)", "6 (practice"), "7 (audio only)"]: ')
     t_numPlays=response["items"][0]["statistics"]["viewCount"]
 
+    response = [my_title, my_artist, my_description, c_publishedDate, t_updatedDate, my_gender, my_genre, my_type, t_numPlays]
+    '''
     print()
     print('The following values will be updated.')
     print("Title: ", my_title)
@@ -107,6 +109,7 @@ def youtube_qry(mv):
     print("genre: ", my_genre)
     print("type: ", my_type)
     print("numPlays: ", t_numPlays)
+    '''
 
     return response
 
@@ -127,10 +130,29 @@ args = parser.parse_args()
 music_vid = args.music_video
 # my_data = youtube_qry('38xYeot-ciM')
 
+# Retrieve what we have already in the database
+cursor = connection.cursor()
+rrecord = cursor.execute(
+    "SELECT * from musicvideo WHERE MV_ID=?",
+    (music_vid,)
+).fetchall()
+print(rrecord)
+
 if args.update:
     my_data = youtube_qry(music_vid)
     # print("Playlist response output:")
     # print(my_data)
+    print()
+    print('The following values will be updated.')
+    print("Title: ", my_data[0])
+    print("Artist: ", my_data[1])
+    print("Description: ", my_data[2])
+    print("publishedDate: ", my_data[3])
+    print("updatedDate: ", my_data[4])
+    print("gender: ", my_data[5])
+    print("genre: ", my_data[6])
+    print("type: ", my_data[7])
+    print("numPlays: ", my_data[8])
 
 # This function is not implemented yet!
 if args.stats:
