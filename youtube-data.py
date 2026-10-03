@@ -124,8 +124,8 @@ def youtube_qry(mv):
 ###  MAIN SCRIPT EXECUTION  ###
 parser = argparse.ArgumentParser()
 parser.add_argument("music_video")
-parser.add_argument("-u", "--update", help="Update the musicvideo table using data from API", action="store_true")
-parser.add_argument("-s", "--stats", help="Stats. Just update the updatedDate and numPlays from API", action="store_true")
+# parser.add_argument("-u", "--update", help="Update the musicvideo table using data from API", action="store_true")
+# parser.add_argument("-s", "--stats", help="Stats. Just update the updatedDate and numPlays from API", action="store_true")
 args = parser.parse_args()
 music_vid = args.music_video
 # my_data = youtube_qry('38xYeot-ciM')
@@ -138,7 +138,13 @@ rrecord = cursor.execute(
 ).fetchall()
 print(rrecord)
 
-if args.update:
+# Probably will eliminate the arguments to script, and just request input within
+# The program:
+input_aa = input('Please choose: Update|Stats|Quit U|S|Q: ')
+
+
+# if args.update:
+if (input_aa.lower()).startswith("u"):
     my_data = youtube_qry(music_vid)
     # print("Playlist response output:")
     # print(my_data)
@@ -154,6 +160,18 @@ if args.update:
     print("type: ", my_data[7])
     print("numPlays: ", my_data[8])
 
+    # mi_data = db_update(some_var):
+
 # This function is not implemented yet!
-if args.stats:
+#if args.stats:
+if (input_aa.lower()).startswith("s"):
+    print("Stats update requested!")
     print("This feature is not implemented yet!")
+    #     me_data = youtube_qry(some_var)
+
+# This function is not implemented yet!
+#if args.stats:
+if (input_aa.lower()).startswith("q"):
+    print("Exiting youtube-data.py")
+
+

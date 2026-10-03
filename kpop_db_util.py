@@ -82,7 +82,6 @@ def update_mv_theme_table(json_file):
 parser = argparse.ArgumentParser()
 parser.add_argument("json_file")
 parser.add_argument("-t", "--theme", help="update theme table from json file", action="store_true")
-# This will be implemented later
 parser.add_argument("-m", "--mv", help="update mv_theme table from json", action="store_true")
 args = parser.parse_args()
 json_file = args.json_file
