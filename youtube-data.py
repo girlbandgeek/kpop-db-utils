@@ -72,44 +72,32 @@ def youtube_qry(mv):
     '''
     # Here is placeholder for extracting the db fields
     print()
-    print("Extract the desired fields")
-    ref_url='https://www.youtube.com/watch?v='+mv
-    print("Reference url: ", ref_url)
+    print("Extracting the desired fields from YouTube API ...")
+    # ref_url='https://www.youtube.com/watch?v='+mv
+    # print("Reference url: ", ref_url)
     t_title=response["items"][0]["snippet"]["title"]
     print("Title: ", t_title)
     # title: text (song title)
-    my_title = input('Enter song title: ')
+    # my_title = input('Enter song title: ')
     # artist: text
-    my_artist = input('Enter artist name: ')
+    # my_artist = input('Enter artist name: ')
     # description: text
-    my_description = input('Enter description (optional): ')
+    # my_description = input('Enter description (optional): ')
 
     # publishedDate: text [formatted as "YYYY-MM-DD HH:MM:SS.SSS"]
     t_publishedDate=response["items"][0]["snippet"]["publishedAt"]
     c_publishedDate=datetime.datetime.strptime(t_publishedDate, "%Y-%m-%dT%H:%M:%SZ")
     print("publishedDate: ", c_publishedDate)
     # updatedDate: text [formatted as "YYYY-MM-DD HH:MM:SS.SSS"]
-    t_updatedDate=datetime.datetime.now()
+    # t_updatedDate=datetime.datetime.now()
     # print("updatedDate: ", t_updatedDate)
-    my_gender = input('Enter gender ["1 (boy group)", "2 (girl group)", "3 (sole male)", "4 (solo female)", "5 (mixed)", "6 (other)"]: ')
-    my_genre = input('Enter genre ["1 (k-pop)", "2 (k-indie)", "3 (k-hiphop)", "4 (k-rock)"]: ')
-    my_type = input('Enter type ["1 (MV)", "2 (performance)", "3 (music show)", "4 (fancam)", "5 (live)", "6 (practice"), "7 (audio only)"]: ')
+    # my_gender = input('Enter gender ["1 (boy group)", "2 (girl group)", "3 (sole male)", "4 (solo female)", "5 (mixed)", "6 (other)"]: ')
+    # my_genre = input('Enter genre ["1 (k-pop)", "2 (k-indie)", "3 (k-hiphop)", "4 (k-rock)"]: ')
+    # my_type = input('Enter type ["1 (MV)", "2 (performance)", "3 (music show)", "4 (fancam)", "5 (live)", "6 (practice"), "7 (audio only)"]: ')
     t_numPlays=response["items"][0]["statistics"]["viewCount"]
 
-    response = [my_title, my_artist, my_description, c_publishedDate, t_updatedDate, my_gender, my_genre, my_type, t_numPlays]
-    '''
-    print()
-    print('The following values will be updated.')
-    print("Title: ", my_title)
-    print("Artist: ", my_artist)
-    print("Description: ", my_description)
-    print("publishedDate: ", c_publishedDate)
-    print("updatedDate: ", t_updatedDate)
-    print("gender: ", my_gender)
-    print("genre: ", my_genre)
-    print("type: ", my_type)
-    print("numPlays: ", t_numPlays)
-    '''
+    # response = [my_title, my_artist, my_description, c_publishedDate, t_updatedDate, my_gender, my_genre, my_type, t_numPlays]
+    response = [t_title, c_publishedDate, t_numPlays]
 
     return response
 
@@ -136,42 +124,69 @@ rrecord = cursor.execute(
     "SELECT * from musicvideo WHERE MV_ID=?",
     (music_vid,)
 ).fetchall()
+print("Existing contents of k-pop database:")
 print(rrecord)
 
 # Probably will eliminate the arguments to script, and just request input within
 # The program:
-input_aa = input('Please choose: Update|Stats|Quit U|S|Q: ')
+input_aa = input('Please choose: Update|Edit|Stats|Quit U|E|S|Q: ')
 
-
+# Populate db fields using API data and user input
 # if args.update:
 if (input_aa.lower()).startswith("u"):
     my_data = youtube_qry(music_vid)
-    # print("Playlist response output:")
-    # print(my_data)
+    ref_url='https://www.youtube.com/watch?v='+music_vid
+    print("Reference url: ", ref_url)
     print()
-    print('The following values will be updated.')
-    print("Title: ", my_data[0])
-    print("Artist: ", my_data[1])
-    print("Description: ", my_data[2])
-    print("publishedDate: ", my_data[3])
-    print("updatedDate: ", my_data[4])
-    print("gender: ", my_data[5])
-    print("genre: ", my_data[6])
-    print("type: ", my_data[7])
-    print("numPlays: ", my_data[8])
+    # inp = int(input('Enter the inputs: ').strip() or "42")
+    # sales = float(input("Please enter your sales from day {}".format(x)))
 
-    # mi_data = db_update(some_var):
+    my_title = input("Enter song title. Current value {} ".format(my_data[0])).strip() or my_data[0]
+    my_artist = input('Enter artist name: ')
+    my_description = input('Enter description (optional): ')
+    my_pubDate= input("Enter published date. Current value {} ".format(my_data[1])).strip() or my_data[1]
+    t_updatedDate=datetime.datetime.now()
+    my_updatedDate= input("Enter update date. Current value {} ".format(t_updatedDate)).strip() or t_updatedDate
+    my_gender = input('Enter gender ["1 (boy group)", "2 (girl group)", "3 (sole male)", "4 (solo female)", "5 (mixed)", "6 (other)"]: ')
+    my_genre = input('Enter genre ["1 (k-pop)", "2 (k-indie)", "3 (k-hiphop)", "4 (k-rock)"]: ')
+    my_type = input('Enter type ["1 (MV)", "2 (performance)", "3 (music show)", "4 (fancam)", "5 (live)", "6 (practice"), "7 (audio only)"]: ')
+    my_numPlays = input("Enter view count. Current value {} ".format(my_data[2])).strip() or my_data[2]
+
+    # print('The following values will be updated.')
+    print("Title: ", my_title)
+    print("Artist: ", my_artist)
+    print("Description: ", my_description)
+    print("publishedDate: ", my_pubDate)
+    print("updatedDate: ", t_updatedDate)
+    print("gender: ", my_gender)
+    print("genre: ", my_genre)
+    print("type: ", my_type)
+    print("numPlays: ", my_numPlays)
+
+    input_bb = input('Do you wish to update db with these values y|n?: ')
+    if input_bb == "y":
+        print("updating database - placeholder")
+        # mi_data = db_update(some_var):
+    else:
+        sys.exit()
+
+# if args.update:
+elif (input_aa.lower()).startswith("e"):
+    print("Edit existing data requested!")
+    print("This feature is not implemented yet!")
 
 # This function is not implemented yet!
 #if args.stats:
-if (input_aa.lower()).startswith("s"):
+elif (input_aa.lower()).startswith("s"):
     print("Stats update requested!")
     print("This feature is not implemented yet!")
     #     me_data = youtube_qry(some_var)
 
 # This function is not implemented yet!
 #if args.stats:
-if (input_aa.lower()).startswith("q"):
+elif (input_aa.lower()).startswith("q"):
     print("Exiting youtube-data.py")
 
-
+else:
+    print('Valid options are: Update|Edit|Stats|Quit U|E|S|Q: ')
+    print("Exiting youtube-data.py")
