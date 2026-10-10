@@ -106,8 +106,18 @@ def youtube_qry(mv):
 #      return db_contents # list containing db record associated with the requested mv
 
 # Function to update database with enriched data
-# def db_update(item_list):
-#      return db_result # possibly some kind of status
+def db_update(item_list):
+    cursor = connection.cursor()
+    # cursor.execute("INSERT INTO theme VALUES(?,?,?,?)", (newThemeId, theme, pl_date_bare, playlistID))
+    # mi_data = db_update[music_vid, my_title, my_artist, my_description, my_pubDate, t_updatedDate, my_gender, my_genre, my_type, my_numPlays]
+
+    cursor.execute(
+        "UPDATE musicvideo SET title = ?, artist = ?, description = ?, publishedDate =?, updatedDate = ?, gender = ?, genre = ?, type = ?, numPlays = ? WHERE MV_ID = ?", (item_list[1], item_list[2], item_list[3], item_list[4], item_list[5], item_list[6], item_list[7], item_list[8], item_list[9], item_list[0])
+    )
+
+    # cur.execute("UPDATE ExampleTable SET Age = 18 WHERE Age = 17")
+    connection.commit()
+    # return db_result # possibly some kind of status
 
 ###  MAIN SCRIPT EXECUTION  ###
 parser = argparse.ArgumentParser()
@@ -166,7 +176,7 @@ if (input_aa.lower()).startswith("u"):
     input_bb = input('Do you wish to update db with these values y|n?: ')
     if input_bb == "y":
         print("updating database - placeholder")
-        # mi_data = db_update(some_var):
+        db_update([music_vid, my_title, my_artist, my_description, my_pubDate, t_updatedDate, my_gender, my_genre, my_type, my_numPlays])
     else:
         sys.exit()
 
