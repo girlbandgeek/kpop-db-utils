@@ -154,12 +154,18 @@ music_vid = args.music_video
 
 # Retrieve what we have already in the database
 cursor = connection.cursor()
-rrecord = cursor.execute(
+mrecord = cursor.execute(
     "SELECT * from musicvideo WHERE MV_ID=?",
     (music_vid,)
 ).fetchall()
 print("Existing contents of k-pop database:")
+rrecord=mrecord[0]
 print(rrecord)
+print()
+
+# Display reference url
+ref_url='https://www.youtube.com/watch?v='+music_vid
+print("Reference url: ", ref_url)
 
 # Probably will eliminate the arguments to script, and just request input within
 # The program:
@@ -169,13 +175,8 @@ input_aa = input('Please choose: Update|Edit|Stats|Quit U|E|S|Q: ')
 # if args.update:
 if (input_aa.lower()).startswith("u"):
     my_data = youtube_qry(music_vid)
-    ref_url='https://www.youtube.com/watch?v='+music_vid
-    print("Reference url: ", ref_url)
-    print()
-    # inp = int(input('Enter the inputs: ').strip() or "42")
-    # sales = float(input("Please enter your sales from day {}".format(x)))
 
-    my_title = input("Enter song title. Current value {} ".format(my_data[0])).strip() or my_data[0]
+    my_title = input('Enter song title. Current value {} : '.format(my_data[0])).strip() or my_data[0]
     my_artist = input('Enter artist name: ')
     my_description = input('Enter description (optional): ')
     my_pubDate= input("Enter published date. Current value {} ".format(my_data[1])).strip() or my_data[1]
@@ -201,15 +202,44 @@ if (input_aa.lower()).startswith("u"):
 
     input_bb = input('Do you wish to update db with these values y|n?: ')
     if input_bb == "y":
-        print("updating database - placeholder")
+        print("updating database!")
         db_update([music_vid, my_title, my_artist, my_description, my_pubDate, my_updatedDate, my_gender, my_genre, my_type, my_numPlays])
     else:
         sys.exit()
 
-# if args.update:
+# Modify the existing fields in the database
 elif (input_aa.lower()).startswith("e"):
     print("Edit existing data requested!")
-    print("This feature is not implemented yet!")
+    e_title = input('Enter song title. Current value {} : '.format(rrecord[1])).strip() or rrecord[1]
+    e_artist = input('Enter artist name. Current value {} : '.format(rrecord[2])).strip() or rrecord[2]
+    e_description = input('Enter (optional) description. Current value {} : '.format(rrecord[3])).strip() or rrecord[3]
+    e_pubDate= input('Enter published date. Current value {} : '.format(rrecord[4])).strip() or rrecord[4]
+    ttp_updatedDate=datetime.datetime.now()
+    # Remove milliseconds
+    tp_updatedDate = ttp_updatedDate.strftime('%Y-%m-%d %H:%M:%S')
+    e_updatedDate= input('Enter update date. Current value {} '.format(tp_updatedDate)).strip() or tp_updatedDate
+    e_gender = input('Enter gender ["1 (boy group)", "2 (girl group)", "3 (sole male)", "4 (solo female)", "5 (mixed)", "6 (other)"]. Current value {} : '.format(rrecord[6])).strip() or rrecord[6]
+    e_genre = input('Enter genre ["1 (k-pop)", "2 (k-indie)", "3 (k-hiphop)", "4 (k-rock)"]. Current value {} : '.format(rrecord[7])).strip() or rrecord[7]
+    e_type = input('Enter type ["1 (MV)", "2 (performance)", "3 (music show)", "4 (fancam)", "5 (live)", "6 (practice"), "7 (audio only)"]. Current value {} : '.format(rrecord[8])).strip() or rrecord[8]
+    e_numPlays = input("Enter view count. Current value {} ".format(rrecord[9])).strip() or rrecord[9]
+
+    # print('The following values will be updated.')
+    print("Title: ", e_title)
+    print("Artist: ", e_artist)
+    print("Description: ", e_description)
+    print("publishedDate: ", e_pubDate)
+    print("updatedDate: ", e_updatedDate)
+    print("gender: ", e_gender)
+    print("genre: ", e_genre)
+    print("type: ", e_type)
+    print("numPlays: ", e_numPlays)
+
+    input_cc = input('Do you wish to update db with these values y|n?: ')
+    if input_cc == "y":
+        print("updating database!")
+        db_update([music_vid, e_title, e_artist, e_description, e_pubDate, e_updatedDate, e_gender, e_genre, e_type, e_numPlays])
+    else:
+        sys.exit()
 
 # This function is not implemented yet!
 #if args.stats:
