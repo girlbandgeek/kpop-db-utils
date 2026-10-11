@@ -17,8 +17,32 @@ import googleapiclient.errors
 from googleapiclient.discovery import build
 import sqlite3
 
+# Handle sqlite date conversion
+# Define the Adapter (Python object -> SQLite string)
+def adapt_date(val):
+    return val.isoformat()
+
+# Define the Adapter (Python object -> SQLite string)
+def adapt_datetime(val):
+    return val.replace(tzinfo=None).isoformat()
+
+# Define the Converter (SQLite string -> Python object)
+def convert_date(s):
+    return datetime.date.fromisoformat(s.decode("utf-8"))
+
+def convert_datetime(val):
+    """Convert ISO 8601 datetime to datetime.datetime object."""
+    return datetime.datetime.fromisoformat(val.decode())
+
+# register datetime adapters:
+sqlite3.register_adapter(datetime.date, adapt_date)
+sqlite3.register_adapter(datetime.datetime, adapt_datetime)
+sqlite3.register_converter("date", convert_date)
+sqlite3.register_converter("datetime", convert_datetime)
+
 sqlite_db = '/var/sqlite/kpop_monday.db'
-connection = sqlite3.connect(sqlite_db)
+# sqlite_db = '/var/sqlite/kpop_monday_new.db'
+connection = sqlite3.connect(sqlite_db, detect_types=sqlite3.PARSE_COLNAMES)
 
 # Define some variables
 # I have created an api key. This may supersede the Oauth stuff.
@@ -155,7 +179,9 @@ if (input_aa.lower()).startswith("u"):
     my_artist = input('Enter artist name: ')
     my_description = input('Enter description (optional): ')
     my_pubDate= input("Enter published date. Current value {} ".format(my_data[1])).strip() or my_data[1]
-    t_updatedDate=datetime.datetime.now()
+    tt_updatedDate=datetime.datetime.now()
+    # Remove milliseconds
+    t_updatedDate = tt_updatedDate.strftime('%Y-%m-%d %H:%M:%S')
     my_updatedDate= input("Enter update date. Current value {} ".format(t_updatedDate)).strip() or t_updatedDate
     my_gender = input('Enter gender ["1 (boy group)", "2 (girl group)", "3 (sole male)", "4 (solo female)", "5 (mixed)", "6 (other)"]: ')
     my_genre = input('Enter genre ["1 (k-pop)", "2 (k-indie)", "3 (k-hiphop)", "4 (k-rock)"]: ')
@@ -167,7 +193,7 @@ if (input_aa.lower()).startswith("u"):
     print("Artist: ", my_artist)
     print("Description: ", my_description)
     print("publishedDate: ", my_pubDate)
-    print("updatedDate: ", t_updatedDate)
+    print("updatedDate: ", my_updatedDate)
     print("gender: ", my_gender)
     print("genre: ", my_genre)
     print("type: ", my_type)
@@ -176,7 +202,7 @@ if (input_aa.lower()).startswith("u"):
     input_bb = input('Do you wish to update db with these values y|n?: ')
     if input_bb == "y":
         print("updating database - placeholder")
-        db_update([music_vid, my_title, my_artist, my_description, my_pubDate, t_updatedDate, my_gender, my_genre, my_type, my_numPlays])
+        db_update([music_vid, my_title, my_artist, my_description, my_pubDate, my_updatedDate, my_gender, my_genre, my_type, my_numPlays])
     else:
         sys.exit()
 
