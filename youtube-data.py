@@ -132,16 +132,19 @@ def youtube_qry(mv):
 # Function to update database with enriched data
 def db_update(item_list):
     cursor = connection.cursor()
-    # cursor.execute("INSERT INTO theme VALUES(?,?,?,?)", (newThemeId, theme, pl_date_bare, playlistID))
-    # mi_data = db_update[music_vid, my_title, my_artist, my_description, my_pubDate, t_updatedDate, my_gender, my_genre, my_type, my_numPlays]
-
     cursor.execute(
         "UPDATE musicvideo SET title = ?, artist = ?, description = ?, publishedDate =?, updatedDate = ?, gender = ?, genre = ?, type = ?, numPlays = ? WHERE MV_ID = ?", (item_list[1], item_list[2], item_list[3], item_list[4], item_list[5], item_list[6], item_list[7], item_list[8], item_list[9], item_list[0])
     )
-
-    # cur.execute("UPDATE ExampleTable SET Age = 18 WHERE Age = 17")
     connection.commit()
     # return db_result # possibly some kind of status
+
+# Function to update database with updatedDate and numPlays only
+def db_update_stats(iitem_list):
+    cursor = connection.cursor()
+    cursor.execute(
+        "UPDATE musicvideo SET updatedDate = ?, numPlays = ? WHERE MV_ID = ?", (iitem_list[1], iitem_list[2], iitem_list[0])
+    )
+    connection.commit()
 
 ###  MAIN SCRIPT EXECUTION  ###
 parser = argparse.ArgumentParser()
@@ -186,7 +189,7 @@ if (input_aa.lower()).startswith("u"):
     my_updatedDate= input("Enter update date. Current value {} ".format(t_updatedDate)).strip() or t_updatedDate
     my_gender = input('Enter gender ["1 (boy group)", "2 (girl group)", "3 (sole male)", "4 (solo female)", "5 (mixed)", "6 (other)"]: ')
     my_genre = input('Enter genre ["1 (k-pop)", "2 (k-indie)", "3 (k-hiphop)", "4 (k-rock)"]: ')
-    my_type = input('Enter type ["1 (MV)", "2 (performance)", "3 (music show)", "4 (fancam)", "5 (live)", "6 (practice"), "7 (audio only)"]: ')
+    my_type = input('Enter type ["1 (MV)", "2 (performance)", "3 (music show)", "4 (fancam)", "5 (live)", "6 (practice"), "7 (audio only)", "8 (soundtrack)"]: ')
     my_numPlays = input("Enter view count. Current value {} ".format(my_data[2])).strip() or my_data[2]
 
     # print('The following values will be updated.')
@@ -220,7 +223,7 @@ elif (input_aa.lower()).startswith("e"):
     e_updatedDate= input('Enter update date. Current value {} '.format(tp_updatedDate)).strip() or tp_updatedDate
     e_gender = input('Enter gender ["1 (boy group)", "2 (girl group)", "3 (sole male)", "4 (solo female)", "5 (mixed)", "6 (other)"]. Current value {} : '.format(rrecord[6])).strip() or rrecord[6]
     e_genre = input('Enter genre ["1 (k-pop)", "2 (k-indie)", "3 (k-hiphop)", "4 (k-rock)"]. Current value {} : '.format(rrecord[7])).strip() or rrecord[7]
-    e_type = input('Enter type ["1 (MV)", "2 (performance)", "3 (music show)", "4 (fancam)", "5 (live)", "6 (practice"), "7 (audio only)"]. Current value {} : '.format(rrecord[8])).strip() or rrecord[8]
+    e_type = input('Enter type ["1 (MV)", "2 (performance)", "3 (music show)", "4 (fancam)", "5 (live)", "6 (practice"), "7 (audio only)", "8 (soundtrack)"]. Current value {} : '.format(rrecord[8])).strip() or rrecord[8]
     e_numPlays = input("Enter view count. Current value {} ".format(rrecord[9])).strip() or rrecord[9]
 
     # print('The following values will be updated.')
@@ -245,11 +248,25 @@ elif (input_aa.lower()).startswith("e"):
 #if args.stats:
 elif (input_aa.lower()).startswith("s"):
     print("Stats update requested!")
-    print("This feature is not implemented yet!")
-    #     me_data = youtube_qry(some_var)
+    # print("This feature is not implemented yet!")
+    me_data = youtube_qry(music_vid)
+    utp_updatedDate=datetime.datetime.now()
+    # Remove milliseconds
+    up_updatedDate = utp_updatedDate.strftime('%Y-%m-%d %H:%M:%S')
+
+    print('The following values will be updated.')
+    print("updatedDate: ", up_updatedDate)
+    print("numPlays: ", me_data[2])
+
+    input_dd = input('Do you wish to update db with these values y|n?: ')
+    if input_dd == "y":
+        print("updating database!")
+        # db_update_stats
+        db_update_stats([music_vid, up_updatedDate, me_data[2]])
+    else:
+        sys.exit()
 
 # This function is not implemented yet!
-#if args.stats:
 elif (input_aa.lower()).startswith("q"):
     print("Exiting youtube-data.py")
 

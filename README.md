@@ -32,7 +32,7 @@ usage: youtube-data.py [-h] music_video
 	+ updatedDate: text [formatted as "YYYY-MM-DD HH:MM:SS.SSS"]
 	+ gender: integer ["1 (boy group)", "2 (girl group)", "3 (sole male)", "4 (solo female)", "5 (mixed)", "6 (other)"]
 	+ genre: integer [1 (k-pop)", "2 (k-indie)", "3 (k-hiphop)", "4 (k-rock)]
-	type: integer ["1 (MV)", "2 (performance)", "3 (music show)", "4 (fancam)", "5 (live)", "6 (practice)"]
+	type: integer ["1 (MV)", "2 (performance)", "3 (music show)", "4 (fancam)", "5 (live)", "6 (practice)", "7 (audio only)", "8 (soundtrack)"]
 	+ numPlays: integer
 +
 * playlist
