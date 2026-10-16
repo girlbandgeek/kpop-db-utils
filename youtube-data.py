@@ -1,5 +1,6 @@
-# Pull selected statuses with Mastodon API and process them
-# from mastodon import Mastodon
+# Extract musicvideo data from YouTube API and provides
+# functions to update the database
+#
 import argparse
 import datetime
 from datetime import date
