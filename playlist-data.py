@@ -52,26 +52,48 @@ def playlist_qry(pl):
 
     youtube = build('youtube', 'v3', developerKey=api_key)
 
-    '''
-    request = youtube.videos().list(
-        # part='snippet,contentDetails,statistics',
-        # part='snippet',
-        part='snippet,statistics',
-        id=mv
-    )
-    '''
-
+    # Will need to put this in a loop, and pass the
     request = youtube.playlistItems().list(
-        part="snippet,contentDetails",
-        maxResults=25,
+        # part="contentDetails","snippet"
+        part="contentDetails",
+        maxResults=50,
         playlistId=pl
     )
 
     response = request.execute()
+    # Explore the layout of the YT response
 
-    return response
 
-## Main execution
-my_playlist = 'PLRw83lLXjCy0'
+    '''
+    print("Explore keys/values in YT response")
+    print()
+    for key, value in response.items():
+        print("key: ", key)
+        print("value: ", response[key])
+        print("items type: ", type(response[key]))
+        print()
+
+    '''
+    # define a results list
+    result_list=[]
+    item_list=response["items"]
+    print("Unpacking the list of music videos")
+
+    for vvalue in item_list :
+        # print(vvalue["contentDetails"]["videoId"])
+        result_list.append(vvalue["contentDetails"]["videoId"])
+
+
+
+    return result_list
+
+###  MAIN SCRIPT EXECUTION  ###
+parser = argparse.ArgumentParser()
+parser.add_argument("playlist")
+args = parser.parse_args()
+# parser.add_argument("my_date")
+# parser.add_argument("my_theme")
+my_playlist = args.playlist
 my_data = playlist_qry(my_playlist)
 print(my_data)
+print("Total number of videos: ", len(my_data))
