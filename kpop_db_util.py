@@ -38,11 +38,11 @@ def update_theme_table(json_file):
     if bool[0] > 0:
         print("themeId ", newThemeId, "already present in theme table. Nothing to add.")
     else:
-        res = "INSERT INTO theme VALUES('{}', '{}', '{}', '{}');".format(newThemeId, theme, pl_date_bare, playlistID)
+        res = "INSERT INTO theme VALUES('{}', '{}', '{}', '{}', '{}', '{}');".format(newThemeId, theme, pl_date_bare, playlistID, '', '')
         print(res)
         # Write directly to the database:
         cursor = connection.cursor()
-        cursor.execute("INSERT INTO theme VALUES(?,?,?,?)", (newThemeId, theme, pl_date_bare, playlistID))
+        cursor.execute("INSERT INTO theme VALUES(?,?,?,?,?,?)", (newThemeId, theme, pl_date_bare, playlistID, '', ''))
         connection.commit()
 
 # Function to update mv_theme table
