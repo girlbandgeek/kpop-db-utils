@@ -52,38 +52,72 @@ def playlist_qry(pl):
 
     youtube = build('youtube', 'v3', developerKey=api_key)
 
-    # Will need to put this in a loop, and pass the
-    request = youtube.playlistItems().list(
-        # part="contentDetails","snippet"
-        part="contentDetails",
-        maxResults=50,
-        playlistId=pl
-    )
-
-    response = request.execute()
-    # Explore the layout of the YT response
 
 
-    '''
-    print("Explore keys/values in YT response")
-    print()
-    for key, value in response.items():
-        print("key: ", key)
-        print("value: ", response[key])
-        print("items type: ", type(response[key]))
-        print()
-
-    '''
     # define a results list
     result_list=[]
-    item_list=response["items"]
+
+    # Determine total playlist video count
+    initialRequest = youtube.playlistItems().list(
+    # part="contentDetails","snippet"
+    part="contentDetails",
+    maxResults=50,
+    playlistId=pl,
+    )
+
+    initialResponse = initialRequest.execute()
+    # Explore the layout of the YT response
+
+    initial_item_list=initialResponse["items"]
     print("Unpacking the list of music videos")
 
-    for vvalue in item_list :
+    for vvalue in initial_item_list :
         # print(vvalue["contentDetails"]["videoId"])
         result_list.append(vvalue["contentDetails"]["videoId"])
 
+    myTotalResults = initialResponse["pageInfo"]["totalResults"]
+    print("myTotalResults: ", myTotalResults)
 
+    myPageToken = initialResponse["nextPageToken"]
+    print("myPageToken: ", myPageToken)
+
+    while len(result_list) <= myTotalResults:
+
+        # Will need to put this in a loop, and pass the
+        request = youtube.playlistItems().list(
+            # part="contentDetails","snippet"
+            part="contentDetails",
+            maxResults=50,
+            playlistId=pl,
+            pageToken=myPageToken
+        )
+
+        response = request.execute()
+        # Explore the layout of the YT response
+
+
+        print("Explore keys/values in YT response")
+        print()
+        for key, value in response.items():
+            print("key: ", key)
+            print("value: ", response[key])
+            print("items type: ", type(response[key]))
+            print()
+
+
+        item_list=response["items"]
+        print("Unpacking the list of music videos")
+
+        for wvalue in item_list :
+            # print(vvalue["contentDetails"]["videoId"])
+            if wvalue["contentDetails"]["videoId"] in result_list :
+                print("Video ", wvalue, "already in result_list")
+            else:
+                print("Adding ", wvalue, "to result_list")
+                result_list.append(wvalue["contentDetails"]["videoId"])
+
+        print("Length of result_list: ", len(result_list))
+        # myPageToken = response["nextPageToken"]
 
     return result_list
 
