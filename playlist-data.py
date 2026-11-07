@@ -29,6 +29,9 @@ def convert_datetime(val):
     # Convert ISO 8601 datetime to datetime.datetime object
     return datetime.datetime.fromisoformat(val.decode())
 
+# How many results to return from YouTube api (max = 50)
+myMaxResults=10
+
 # register datetime adapters:
 sqlite3.register_adapter(datetime.datetime, adapt_datetime)
 sqlite3.register_converter("datetime", convert_datetime)
@@ -52,16 +55,14 @@ def playlist_qry(pl):
 
     youtube = build('youtube', 'v3', developerKey=api_key)
 
-
-
     # define a results list
     result_list=[]
 
-    # Determine total playlist video count
+    # Pull the first page of results; find total playlist video count
     initialRequest = youtube.playlistItems().list(
     # part="contentDetails","snippet"
     part="contentDetails",
-    maxResults=50,
+    maxResults=myMaxResults,
     playlistId=pl,
     )
 
@@ -78,46 +79,55 @@ def playlist_qry(pl):
     myTotalResults = initialResponse["pageInfo"]["totalResults"]
     print("myTotalResults: ", myTotalResults)
 
-    myPageToken = initialResponse["nextPageToken"]
-    print("myPageToken: ", myPageToken)
+    if myTotalResults <= myMaxResults :
+        return result_list
+    else:
 
-    while len(result_list) <= myTotalResults:
+        myPageToken = initialResponse["nextPageToken"]
+        print("myPageToken: ", myPageToken)
 
-        # Will need to put this in a loop, and pass the
-        request = youtube.playlistItems().list(
-            # part="contentDetails","snippet"
-            part="contentDetails",
-            maxResults=50,
-            playlistId=pl,
-            pageToken=myPageToken
-        )
+        while len(result_list) < myTotalResults :
 
-        response = request.execute()
-        # Explore the layout of the YT response
+            request = youtube.playlistItems().list(
+                # part="contentDetails","snippet"
+                part="contentDetails",
+                maxResults=myMaxResults,
+                playlistId=pl,
+                pageToken=myPageToken
+            )
+
+            response = request.execute()
+            # Explore the layout of the YT response
 
 
-        print("Explore keys/values in YT response")
-        print()
-        for key, value in response.items():
-            print("key: ", key)
-            print("value: ", response[key])
-            print("items type: ", type(response[key]))
+            print("Explore keys/values in YT response")
             print()
+            for key, value in response.items():
+                print("key: ", key)
+                print("value: ", response[key])
+                print("items type: ", type(response[key]))
+                print()
 
 
-        item_list=response["items"]
-        print("Unpacking the list of music videos")
+            item_list=response["items"]
+            print("Unpacking the list of music videos")
 
-        for wvalue in item_list :
-            # print(vvalue["contentDetails"]["videoId"])
-            if wvalue["contentDetails"]["videoId"] in result_list :
-                print("Video ", wvalue, "already in result_list")
-            else:
-                print("Adding ", wvalue, "to result_list")
-                result_list.append(wvalue["contentDetails"]["videoId"])
+            for wvalue in item_list :
+                # print(vvalue["contentDetails"]["videoId"])
+                if wvalue["contentDetails"]["videoId"] in result_list :
+                    print("Video ", wvalue, "already in result_list")
+                else:
+                    print("Adding ", wvalue, "to result_list")
+                    result_list.append(wvalue["contentDetails"]["videoId"])
 
-        print("Length of result_list: ", len(result_list))
-        # myPageToken = response["nextPageToken"]
+            try:
+                myPageToken = response["nextPageToken"]
+                print("myPageToken: ", myPageToken)
+            except:
+                print("nextPageToken value not returned.")
+
+            print("Length of result_list: ", len(result_list))
+            # myPageToken = response["nextPageToken"]
 
     return result_list
 
