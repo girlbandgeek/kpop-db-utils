@@ -30,7 +30,7 @@ def convert_datetime(val):
     return datetime.datetime.fromisoformat(val.decode())
 
 # How many results to return from YouTube api (max = 50)
-myMaxResults=10
+myMaxResults=20
 
 # register datetime adapters:
 sqlite3.register_adapter(datetime.datetime, adapt_datetime)
@@ -67,7 +67,6 @@ def playlist_qry(pl):
     )
 
     initialResponse = initialRequest.execute()
-    # Explore the layout of the YT response
 
     initial_item_list=initialResponse["items"]
     print("Unpacking the list of music videos")
@@ -79,10 +78,13 @@ def playlist_qry(pl):
     myTotalResults = initialResponse["pageInfo"]["totalResults"]
     print("myTotalResults: ", myTotalResults)
 
+    # Check the number of items in the playlist. If it's less the page size
+    # We can retrieve it in one go:
     if myTotalResults <= myMaxResults :
         return result_list
     else:
 
+        # Playlist is longer than playlist. Loop thru to retrieve all videos:
         myPageToken = initialResponse["nextPageToken"]
         print("myPageToken: ", myPageToken)
 
@@ -97,9 +99,9 @@ def playlist_qry(pl):
             )
 
             response = request.execute()
+
             # Explore the layout of the YT response
-
-
+            '''
             print("Explore keys/values in YT response")
             print()
             for key, value in response.items():
@@ -107,7 +109,7 @@ def playlist_qry(pl):
                 print("value: ", response[key])
                 print("items type: ", type(response[key]))
                 print()
-
+            '''
 
             item_list=response["items"]
             print("Unpacking the list of music videos")
@@ -120,6 +122,8 @@ def playlist_qry(pl):
                     print("Adding ", wvalue, "to result_list")
                     result_list.append(wvalue["contentDetails"]["videoId"])
 
+            # If we get nextPageToken value, retrieve the next page.
+            # Otherwise, we're done and the while loop can end.
             try:
                 myPageToken = response["nextPageToken"]
                 print("myPageToken: ", myPageToken)
@@ -127,9 +131,30 @@ def playlist_qry(pl):
                 print("nextPageToken value not returned.")
 
             print("Length of result_list: ", len(result_list))
-            # myPageToken = response["nextPageToken"]
 
     return result_list
+
+# Function to update mv_theme table
+# taken from kpop_db_util.py and modified as appropriate
+def update_mv_theme_table(myThemeId, mv_list):
+
+    for mv in mv_list:
+        # make sure themeId not already present
+        cursor = connection.cursor()
+        bool = cursor.execute(
+            "SELECT COUNT(*) from mv_theme WHERE musicVideoID=? AND themeId=?",
+            (mv, myThemeId,)
+        ).fetchone()
+        print(bool[0])
+        if bool[0] > 0:
+            print("musicVideoID", mv, "with themeId ", myThemeId, "already present in table. Nothing to add.")
+        else:
+            res = "INSERT INTO mv_theme VALUES('{}', '{}');".format(mv, myThemeId)
+            print(res)
+            # Write directly to the database:
+            cursor = connection.cursor()
+            cursor.execute("INSERT INTO mv_theme VALUES(?,?)", (mv, myThemeId))
+            connection.commit()
 
 ###  MAIN SCRIPT EXECUTION  ###
 parser = argparse.ArgumentParser()
