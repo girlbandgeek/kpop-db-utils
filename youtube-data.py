@@ -149,11 +149,12 @@ def db_update_stats(iitem_list):
 
 ###  MAIN SCRIPT EXECUTION  ###
 parser = argparse.ArgumentParser()
-parser.add_argument("music_video")
+# parser.add_argument("music_video")
+parser.add_argument("-m", "--musicvideo", help="Provide the musicvideo to update", action='store')
 # parser.add_argument("-u", "--update", help="Update the musicvideo table using data from API", action="store_true")
 # parser.add_argument("-s", "--stats", help="Stats. Just update the updatedDate and numPlays from API", action="store_true")
 args = parser.parse_args()
-music_vid = args.music_video
+music_vid = args.musicvideo
 # my_data = youtube_qry('38xYeot-ciM')
 
 # Retrieve what we have already in the database
