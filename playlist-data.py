@@ -159,10 +159,19 @@ def update_mv_theme_table(myThemeId, mv_list):
 ###  MAIN SCRIPT EXECUTION  ###
 parser = argparse.ArgumentParser()
 parser.add_argument("playlist")
+parser.add_argument("themeId")
 args = parser.parse_args()
 # parser.add_argument("my_date")
 # parser.add_argument("my_theme")
 my_playlist = args.playlist
+my_theme_Id = args.themeId
 my_data = playlist_qry(my_playlist)
 print(my_data)
 print("Total number of videos: ", len(my_data))
+
+input_aa = input('Do you want to update mv_theme table? y/n: ')
+if (input_aa.lower()).startswith("y"):
+    update_mv_theme_table(my_theme_Id, my_data)
+else:
+    print("mv_theme table will not be updated. exiting.")
+    sys.exit()
